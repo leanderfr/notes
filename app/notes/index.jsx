@@ -1,10 +1,11 @@
 
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useState, useEffect } from 'react';
 import NoteList from  '@components/NoteList';
 import AddNoteModal from  '@components/AddNoteModal';
 import noteService from '@services/noteService';
 
+import alert from '@components/Alert'
 
 const NotesScreen = () => {
 /*
@@ -23,15 +24,19 @@ const NotesScreen = () => {
     fetchNotes();
   }, []);
 
+  //****************************************************************************************************************
+  // ler todas as anotacoes
+  //****************************************************************************************************************
   const fetchNotes = async () => {
     setLoading(true);
     const response = await noteService.getNotes()
     if (response.error) {
       setError(response.error);
-      Alert.alert('Erro', response.error)
+      alert('Erro', response.error)
     } else {
       setNotes(response.data);
       setError(null);
+
     }
     setLoading(false);
   }
@@ -39,6 +44,9 @@ const NotesScreen = () => {
   const[modalVisible, setModalVisible] = useState(false);
   const[newNote, setNewNote] = useState('');
 
+  //****************************************************************************************************************
+  // adicionar anotacao
+  //****************************************************************************************************************
   const addNote = async () => {
     if (newNote.trim() === '') return;
 
@@ -52,23 +60,54 @@ const NotesScreen = () => {
     const response = await noteService.addNote(newNote); 
 
     if (response.error) 
-      Alert.alert('Erro', response.error);
+      alert('Erro', response.error);
 
     else 
       setNotes( [...notes, response.data] );
 
-
-
     setNewNote('');
     setModalVisible(false);
+  }
+
+  //****************************************************************************************************************
+  // excluir anotacao  
+  //****************************************************************************************************************
+  const deleteNote = (id) => {
+
+    alert('Apagar anotação','Tem certeza que quer excluir esta anotação?', 
+      [ {text: 'Cancelar', style: 'cancel', onPress: async () => {}},  
+        {text: 'Excluir', style: 'delete',
+          onPress: async () => { 
+            const response = await noteService.deleteNote(id) ;
+            if ( response.error ) {
+              alert('Erro', response.error);
+            }  else {
+              setNotes(notes.filter((note) => note.$id !== id));
+            }
+          }
+        }
+      ]);
 
   }
+
+
+
+
   return (
 
     <View style={styles.container} >
 
-      {/* lista de notas ja criadas */}
-      <NoteList notes={notes} />
+      {loading ? (      
+        <ActivityIndicator size='large' color='#007bff' />
+      ) : (
+        <>
+          { error && <Text style={styles.errorText}> {error} </Text> }
+
+          {/* lista de notas ja criadas */}
+          <NoteList notes={notes} onDelete={deleteNote} />
+        </> 
+      )}
+
 
       <TouchableOpacity style={styles.addButton} onPress={ () => setModalVisible(true) }>
         <Text style={styles.addButtonText}>+ Add Note</Text>
@@ -128,6 +167,22 @@ addButtonText: {
   fontSize: 18,
   fontWeight: 'bold',
 },
+
+errorText: {
+  color: 'red',
+  textAlign: 'center',
+  marginBottom: 50,
+  fontSize: 16,
+},
+
+cancelButton: {
+  color: 'blue',
+},
+
+deleteButton: {
+  color: 'red',
+}
+
 
 
 

@@ -1,9 +1,10 @@
-import { PanResponder } from 'react-native';
 import { database } from './appwrite';
 
 const databaseService = {
 
+  //****************************************************************************************************************  
   // lista registros
+  //****************************************************************************************************************
   async listaRegistros(dbId, collectionId) {
 
     try {
@@ -18,7 +19,9 @@ const databaseService = {
     }
   },
 
+  //****************************************************************************************************************
   // criar registro
+  //****************************************************************************************************************
   async criarRegistro (dbId, collectionId, data, id=null) {
     try {
       return await database.createDocument(dbId, collectionId, id || undefined, data);
@@ -27,7 +30,22 @@ const databaseService = {
       console.error('Erro inserindo registro', error.message);
       return { error: error.message };
     }
+  },
+
+  //****************************************************************************************************************
+  // excluir registro
+  //****************************************************************************************************************
+  async excluirRegistro (dbId, collectionId, id=null) {
+    try {
+      await database.deleteDocument(dbId, collectionId, id);
+      return{ sucess: true };
+    }
+    catch (error) {
+      console.error('Erro excluindo registro', error.message);
+      return { error: error.message };
+    }
   }
+
 
 
 }

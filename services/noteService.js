@@ -35,13 +35,29 @@ const noteService = {
       data,
       ID.unique()
     );
-
     if (response?.error)  {
       return { error: response.error };
     }
 
     return { data: response};
+  },
+
+
+  // excluir anotacao
+  async deleteNote(id) {
+    const response = await databaseService.excluirRegistro (
+      dbId,
+      collectionId,
+      id
+    );
+
+    if (response?.error)  {
+      return { error: response.error };
+    }
+
+    return {succes: true};
   }
+
 
 
 }
