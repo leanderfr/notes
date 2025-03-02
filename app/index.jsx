@@ -8,13 +8,13 @@ const  HomeScreen = () =>  {
   return (
     <View style={styles.container}   >
       <Image source={ PostItImage } style={styles.image} />
-      <Text style={styles.title}>Welcome to Notes App.</Text>
-      <Text style={styles.subtitle}>Capture your thoughts, anywhere, anytime</Text>
+      <Text style={styles.title}>Welcome to Notes __App.</Text>
+      <Text style={styles.subtitle}>Capture your __thoughts, anywhere, anytime</Text>
 
       <TouchableOpacity 
         style={styles.button}  
         onPress = { () => router.push('/notes') }  >      
-        <Text style={styles.buttonText} >Iniciar</Text>
+        <Text style={styles.buttonText} >Iniciar__</Text>
       </TouchableOpacity>
     </View>
 
