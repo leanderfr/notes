@@ -1,6 +1,7 @@
 
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, TextInput } from 'react-native';
 import { useState } from 'react';
+import NoteList from  '@components/NoteList';
 
 
 const NotesScreen = () => {
@@ -13,20 +14,24 @@ const NotesScreen = () => {
   const[modalVisible, setModalVisible] = useState(false);
   const[newNote, setNewNote] = useState('');
 
+  const addNote = () => {
+    if (newNote.trim() === '') return;
+
+    setNotes( (prevNotes) => [
+      ...prevNotes,
+      {id: Date.now.toString(), text: newNote}
+    ])
+
+    setNewNote('');
+    setModalVisible(false);
+
+  }
   return (
 
     <View style={styles.container} >
-      <FlatList 
-        data = {notes}
-        keyExtractor = { (item) => item.id }
-        renderItem= { ({item}) => (
 
-          <View style={styles.noteItem} >
-              <Text style={styles.noteText}>{ item.text }</Text>
-          </View>
-
-        )} >
-      </FlatList>
+      {/* lista de notas ja criadas */}
+      <NoteList notes={notes} />
 
       <TouchableOpacity style={styles.addButton} onPress={ () => setModalVisible(true) }>
         <Text style={styles.addButtonText}>+ Add Note</Text>
@@ -62,7 +67,7 @@ const NotesScreen = () => {
                     <Text style={styles.cancelButtonText}>Cancel</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.saveButton}  >
+                  <TouchableOpacity style={styles.saveButton} onPress={addNote} >
                     <Text style={styles.saveButtonText}>Save</Text>
                   </TouchableOpacity>
 
