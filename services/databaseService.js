@@ -44,7 +44,23 @@ const databaseService = {
       console.error('Erro excluindo registro', error.message);
       return { error: error.message };
     }
-  }
+  },
+
+  //****************************************************************************************************************
+  // editar registro
+  //****************************************************************************************************************
+  async alterarRegistro(dbId, collectionId, id, data) {
+    try {
+      await database.updateDocument(dbId, collectionId, id, data);
+      return{ sucess: true };
+    }
+    catch (error) {
+      console.error('Erro editando registro', error.message);
+      return { error: error.message };
+    }
+
+  },
+
 
 
 

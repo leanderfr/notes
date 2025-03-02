@@ -7,7 +7,10 @@ const dbId = process.env.EXPO_PUBLIC_APPWRITE_DB_ID;
 const collectionId = process.env.EXPO_PUBLIC_APPWRITE_COL_NOTES_ID;
 
 const noteService = {
+
+  //****************************************************************************************************************
   // ler anotacoes
+  //****************************************************************************************************************
   async getNotes() {
 
     const response = await databaseService.listaRegistros(dbId, collectionId);
@@ -18,7 +21,9 @@ const noteService = {
 
   },
 
+  //****************************************************************************************************************
   // adicionar anotacao
+  //****************************************************************************************************************
   async addNote(text) {
     if (!text) {
       return {error: 'Anotação não pode estar em branco'};
@@ -42,8 +47,9 @@ const noteService = {
     return { data: response};
   },
 
-
+  //****************************************************************************************************************
   // excluir anotacao
+  //****************************************************************************************************************
   async deleteNote(id) {
     const response = await databaseService.excluirRegistro (
       dbId,
@@ -55,8 +61,28 @@ const noteService = {
       return { error: response.error };
     }
 
-    return {succes: true};
+    return {success: true};
+  },
+
+
+  //****************************************************************************************************************
+  // editar anotacao
+  //****************************************************************************************************************
+  async updateNote(id, text) {
+    const response = await databaseService.alterarRegistro (
+      dbId,
+      collectionId,
+      id,
+      { text },
+    );
+
+    if (response?.error)  {
+      return { error: response.error };
+    }
+
+    return {success: true};
   }
+
 
 
 

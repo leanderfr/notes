@@ -1,13 +1,56 @@
 
+import { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 const NoteItem = ( {note, onDelete}) => {
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState( note.text );
+
+  const inputRef = useRef(null);
+
   return(<View style={styles.noteItem} >
-            <Text style={styles.noteText}>{ note.text }</Text>
-            <TouchableOpacity onPress={ () => onDelete(note.$id) }>
-              <Text style={styles.delete}>X</Text>
-            </TouchableOpacity>
+
+            { isEditing ? (
+            
+              <Text 
+                ref = {inputRef}
+                style={styles.noteText}
+                value = {editText}
+                onChangeText = {setEditText}
+                autoFocus
+                onSubmitEditing = {handleSave}
+                returnKeyType='done'
+              >
+
+              </Text>
+
+              ) : (
+                <Text style={styles.noteText}>{ note.text }</Text>
+            )}
+
+            <View style={styles.action} >
+
+                { isEditing ? (
+                
+                  <TouchableOpacity 
+                    onPress={ () => {
+                      handleSave();  
+                      inputRef.current?.blur();
+                    }}>                   
+                    <Text style={styles.delete}>X</Text>
+                  </TouchableOpacity>
+
+                  ) : (
+                    <Text style={styles.noteText}>{ note.text }</Text>
+                )}
+
+
+                <TouchableOpacity onPress={ () => onDelete(note.$id) }>
+                  <Text style={styles.delete}>X</Text>
+                </TouchableOpacity>
+
+            </View>
         </View>
   )
 
