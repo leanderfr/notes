@@ -24,6 +24,7 @@ const AddNoteModal = ( {modalVisible, setModalVisible, newNote, setNewNote, addN
                 style = {styles.input}  
                 placeholder = 'Enter Note'
                 placeholderTextColor = '#aaa'
+                autoFocus
                 value = {newNote}
                 onChangeText = {setNewNote} >
               </TextInput>

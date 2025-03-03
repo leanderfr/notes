@@ -90,6 +90,26 @@ const NotesScreen = () => {
 
   }
 
+  //****************************************************************************************************************
+  // salvar anotacao alterada
+  //****************************************************************************************************************
+  const updateNote = async (id, newText) => {
+    if (! newText.trim() ) {
+      alert('Erro', 'Texto da anotação não pode ser vazio');
+      return;
+    };
+
+    const response = await noteService.updateNote(id, newText)
+    if (response.error) 
+      alert('Erro', response.error);    
+    else
+      setNotes( (prevNotes) => 
+        prevNotes.map((note) => 
+          note.$id == id ? {...note, text: newText} : note)
+      )
+  }
+
+
 
 
 
@@ -104,7 +124,7 @@ const NotesScreen = () => {
           { error && <Text style={styles.errorText}> {error} </Text> }
 
           {/* lista de notas ja criadas */}
-          <NoteList notes={notes} onDelete={deleteNote} />
+          <NoteList notes={notes} onDelete={deleteNote} onEdit={updateNote} />
         </> 
       )}
 
